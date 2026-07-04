@@ -14,17 +14,7 @@ export default function FeedCard({ item }) {
     const color = sourceColors[item.source_type] || 'var(--text-muted)';
     const label = sourceLabels[item.source_type] || item.source_type;
 
-    const timeAgo = (dateStr) => {
-        if (!dateStr) return 'Unknown date';
-        const diff = Date.now() - new Date(dateStr).getTime();
-        const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        if (days > 0) return `${days}d ago`;
-        if (hours > 0) return `${hours}h ago`;
-        if (minutes > 0) return `${minutes}m ago`;
-        return 'Just now';
-    };
+
 
     return (
         <a
@@ -51,7 +41,7 @@ export default function FeedCard({ item }) {
             }}
         >
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <div style={{ marginBottom: '12px' }}>
                 <span style={{
                     fontSize: '11px',
                     fontWeight: '600',
@@ -60,9 +50,6 @@ export default function FeedCard({ item }) {
                     letterSpacing: '0.5px',
                 }}>
                     {label}
-                </span>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                    {timeAgo(item.published_at)}
                 </span>
             </div>
 
@@ -92,16 +79,7 @@ export default function FeedCard({ item }) {
                 </p>
             )}
 
-            {/* Footer */}
-            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{
-                    fontSize: '12px',
-                    color: 'var(--accent)',
-                    fontWeight: '500',
-                }}>
-                    Score: {item.relevance_score?.toFixed(1)}
-                </span>
-            </div>
+
         </a>
     );
 }
