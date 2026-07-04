@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { sendMessage } from '../../lib/api';
 
 export default function ChatPage() {
@@ -88,14 +89,20 @@ export default function ChatPage() {
                         </div>
 
                         {/* Content */}
-                        <div style={{
-                            fontSize: '14px',
-                            color: 'var(--text-primary)',
-                            lineHeight: '1.7',
-                            whiteSpace: 'pre-wrap',
-                        }}>
-                            {msg.content}
-                        </div>
+                        {msg.role === 'assistant' ? (
+                            <div className="prose-dark">
+                                <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            </div>
+                        ) : (
+                            <div style={{
+                                fontSize: '14px',
+                                color: 'var(--text-primary)',
+                                lineHeight: '1.7',
+                                whiteSpace: 'pre-wrap',
+                            }}>
+                                {msg.content}
+                            </div>
+                        )}
 
                         {/* Sources */}
                         {msg.sources && msg.sources.length > 0 && (
