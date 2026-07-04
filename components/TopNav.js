@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
-    { label: 'Feed',  href: '/' },
-    { label: 'Chat',  href: '/chat' },
+    { label: 'Feed', href: '/' },
+    { label: 'Chat', href: '/chat' },
 ];
 
 export default function TopNav() {
@@ -24,9 +24,8 @@ export default function TopNav() {
             display: 'flex',
             alignItems: 'center',
             padding: '0 32px',
-            gap: '24px',
         }}>
-            {/* Logo — outside the pill */}
+            {/* Left — Logo */}
             <Link href="/" style={{
                 fontSize: '18px',
                 fontWeight: '700',
@@ -34,13 +33,17 @@ export default function TopNav() {
                 textDecoration: 'none',
                 letterSpacing: '-0.5px',
                 flexShrink: 0,
-                marginRight: '8px',
+                flex: '0 0 auto',
+                minWidth: '100px',
             }}>
                 FeedMind
             </Link>
 
-            {/* Pill nav container */}
+            {/* Center — pill nav, truly centered via absolute positioning */}
             <div style={{
+                position: 'absolute',
+                left: '50%',
+                transform: 'translateX(-50%)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '2px',
@@ -57,7 +60,7 @@ export default function TopNav() {
                             href={href}
                             style={{
                                 display: 'block',
-                                padding: '5px 16px',
+                                padding: '5px 18px',
                                 borderRadius: '999px',
                                 fontSize: '13px',
                                 fontWeight: active ? '600' : '400',
@@ -74,7 +77,7 @@ export default function TopNav() {
                 })}
             </div>
 
-            {/* Spacer — pushes future right-side items */}
+            {/* Right — spacer (keeps logo left; reserve for future right-side items) */}
             <div style={{ flex: 1 }} />
         </header>
     );

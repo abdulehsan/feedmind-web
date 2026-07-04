@@ -4,11 +4,37 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { sendMessage } from '../../lib/api';
 
+const SUGGESTION_CHIPS = [
+    "What's new with GPT-5?",
+    "Any updates on open source models?",
+    "Compare the latest reasoning models",
+    "What's happening in AI safety research?",
+];
+
+/* Chat bubble icon */
+function ChatBubbleIcon() {
+    return (
+        <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+    );
+}
+
 export default function ChatPage() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const bottomRef = useRef(null);
+    const textareaRef = useRef(null);
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -49,31 +75,87 @@ export default function ChatPage() {
         }
     };
 
+    const handleChipClick = (text) => {
+        setInput(text);
+        textareaRef.current?.focus();
+    };
+
+    const disabled = loading || !input.trim();
+
     return (
         <div style={{ padding: '0 40px', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 72px)' }}>
-            {/* Header */}
-            <div style={{ marginBottom: '24px' }}>
-                <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)' }}>Chat</h1>
-                <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-                    Ask anything about recent AI & tech
-                </p>
-            </div>
 
-            {/* Messages */}
+            {/* ── Messages ──────────────────────────────────────────── */}
             <div style={{
                 flex: 1,
                 overflowY: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '24px',
+                paddingTop: '24px',
                 paddingBottom: '16px',
             }}>
+                {/* Empty state */}
                 {messages.length === 0 && (
-                    <div style={{ color: 'var(--text-muted)', fontSize: '14px', textAlign: 'center', marginTop: '80px' }}>
-                        Ask something like &quot;What&apos;s new with GPT-5?&quot; or &quot;Any updates on open source models?&quot;
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginTop: '80px',
+                        gap: '16px',
+                    }}>
+                        {/* Icon */}
+                        <div style={{ opacity: 0.8 }}>
+                            <ChatBubbleIcon />
+                        </div>
+
+                        {/* Headline */}
+                        <p style={{ color: 'var(--text-muted)', fontSize: '14px', textAlign: 'center' }}>
+                            Ask anything about recent AI &amp; tech
+                        </p>
+
+                        {/* Suggestion chips */}
+                        <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            marginTop: '4px',
+                            maxWidth: '560px',
+                        }}>
+                            {SUGGESTION_CHIPS.map(text => (
+                                <button
+                                    key={text}
+                                    onClick={() => handleChipClick(text)}
+                                    style={{
+                                        backgroundColor: 'var(--bg-card)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: '999px',
+                                        padding: '7px 16px',
+                                        fontSize: '13px',
+                                        color: 'var(--text-secondary)',
+                                        cursor: 'pointer',
+                                        fontFamily: 'inherit',
+                                        transition: 'border-color 0.15s ease, color 0.15s ease',
+                                        whiteSpace: 'nowrap',
+                                    }}
+                                    onMouseEnter={e => {
+                                        e.currentTarget.style.borderColor = 'var(--accent)';
+                                        e.currentTarget.style.color = 'var(--text-primary)';
+                                    }}
+                                    onMouseLeave={e => {
+                                        e.currentTarget.style.borderColor = 'var(--border)';
+                                        e.currentTarget.style.color = 'var(--text-secondary)';
+                                    }}
+                                >
+                                    {text}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 )}
 
+                {/* Message list */}
                 {messages.map((msg, i) => (
                     <div key={i}>
                         {/* Role label */}
@@ -132,28 +214,13 @@ export default function ChatPage() {
                                         onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
                                         onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                                     >
-                                        <span style={{
-                                            fontSize: '11px',
-                                            fontWeight: '700',
-                                            color: 'var(--accent)',
-                                            minWidth: '20px',
-                                        }}>
+                                        <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--accent)', minWidth: '20px' }}>
                                             [{source.number}]
                                         </span>
-                                        <span style={{
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                        }}>
+                                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                             {source.title}
                                         </span>
-                                        <span style={{
-                                            marginLeft: 'auto',
-                                            fontSize: '11px',
-                                            color: 'var(--text-muted)',
-                                            textTransform: 'uppercase',
-                                            flexShrink: 0,
-                                        }}>
+                                        <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', flexShrink: 0 }}>
                                             {source.source_type}
                                         </span>
                                     </a>
@@ -172,49 +239,54 @@ export default function ChatPage() {
                 <div ref={bottomRef} />
             </div>
 
-            {/* Input */}
+            {/* ── Input bar — bordered card container ───────────────── */}
             <div style={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
+                padding: '12px 12px 12px 16px',
+                marginBottom: '16px',
                 display: 'flex',
-                gap: '12px',
-                paddingTop: '16px',
-                borderTop: '1px solid var(--border)',
+                gap: '10px',
+                alignItems: 'flex-end',
             }}>
                 <textarea
+                    ref={textareaRef}
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask about recent AI & tech..."
+                    placeholder="Ask about recent AI &amp; tech..."
                     rows={1}
                     style={{
                         flex: 1,
-                        backgroundColor: 'var(--bg-card)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '8px',
-                        padding: '12px 16px',
+                        backgroundColor: 'transparent',
+                        border: 'none',
+                        outline: 'none',
+                        padding: '4px 0',
                         color: 'var(--text-primary)',
                         fontSize: '14px',
                         resize: 'none',
-                        outline: 'none',
                         fontFamily: 'inherit',
-                        lineHeight: '1.5',
+                        lineHeight: '1.6',
+                        caretColor: 'var(--accent)',
                     }}
-                    onFocus={e => e.target.style.borderColor = 'var(--accent)'}
-                    onBlur={e => e.target.style.borderColor = 'var(--border)'}
                 />
                 <button
                     onClick={handleSend}
-                    disabled={loading || !input.trim()}
+                    disabled={disabled}
                     style={{
-                        backgroundColor: loading || !input.trim() ? 'var(--bg-hover)' : 'var(--accent)',
-                        color: loading || !input.trim() ? 'var(--text-muted)' : '#0E1217',
+                        backgroundColor: disabled ? 'var(--bg-hover)' : 'var(--accent)',
+                        color: disabled ? 'var(--text-muted)' : '#0E1217',
                         border: 'none',
-                        borderRadius: '8px',
-                        padding: '12px 20px',
-                        fontSize: '14px',
+                        borderRadius: '10px',
+                        padding: '8px 18px',
+                        fontSize: '13px',
                         fontWeight: '600',
-                        cursor: loading || !input.trim() ? 'not-allowed' : 'pointer',
-                        transition: 'all 0.15s ease',
+                        cursor: disabled ? 'not-allowed' : 'pointer',
+                        transition: 'background-color 0.15s ease, color 0.15s ease',
                         whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        fontFamily: 'inherit',
                     }}
                 >
                     Send
