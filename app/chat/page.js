@@ -49,7 +49,7 @@ export default function ChatPage() {
     };
 
     return (
-        <div style={{ maxWidth: '720px', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
+        <div style={{ padding: '0 40px', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 72px)' }}>
             {/* Header */}
             <div style={{ marginBottom: '24px' }}>
                 <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)' }}>Chat</h1>

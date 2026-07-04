@@ -1,6 +1,5 @@
 import './globals.css';
-
-import Sidebar from '../components/Sidebar';
+import TopNav from '../components/TopNav';
 
 export const metadata = {
   title: 'FeedMind',
@@ -11,17 +10,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div style={{ display: 'flex' }}>
-          <Sidebar />
-          <main style={{
-            marginLeft: '240px',
-            flex: 1,
-            minHeight: '100vh',
-            padding: '32px',
-          }}>
-            {children}
-          </main>
-        </div>
+        <TopNav />
+        <main style={{
+          paddingTop: '72px',       /* clear fixed topnav (56px bar + 16px breathing room) */
+          minHeight: '100vh',
+          width: '100%',
+        }}>
+          {children}
+        </main>
       </body>
     </html>
   );

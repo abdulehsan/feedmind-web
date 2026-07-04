@@ -68,10 +68,14 @@ export default function FeedCard({ item }) {
                 padding: '22px 26px 24px',
                 textDecoration: 'none',
                 cursor: 'pointer',
-                transition: 'border-color 0.18s ease, box-shadow 0.18s ease',
+                transition: 'border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease',
                 boxShadow: hovered
-                    ? '0 0 0 1px rgba(0, 255, 148, 0.08), 0 6px 28px rgba(0, 0, 0, 0.45)'
+                    ? '0 0 0 1px rgba(0, 255, 148, 0.08), 0 12px 36px rgba(0, 0, 0, 0.55)'
                     : '0 1px 3px rgba(0, 0, 0, 0.25)',
+                transform: hovered ? 'scale(1.03) translateY(-4px)' : 'scale(1) translateY(0)',
+                willChange: 'transform, box-shadow',
+                zIndex: hovered ? 1 : 0,
+                position: 'relative',
             }}
         >
             {/* Source row: icon + label */}
