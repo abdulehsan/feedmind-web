@@ -17,7 +17,7 @@ export default function FeedPage() {
   }, []);
 
   return (
-    <div style={{ maxWidth: '720px' }}>
+    <div style={{ maxWidth: '820px' }}>
       {/* Header */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-primary)' }}>
@@ -38,7 +38,7 @@ export default function FeedPage() {
 
       {/* Cards */}
       {!loading && !error && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {items.length === 0 ? (
             <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>No items yet.</p>
           ) : (
